@@ -1,6 +1,7 @@
 // Khai báo các biến DOM
 const levelSelection = document.getElementById('level-selection');
 const gameContainer = document.getElementById('game-container');
+const gameRetryContainer = document.getElementById('game-retry-container');
 const targetMeaning = document.getElementById('target-meaning');
 const targetReading = document.getElementById('target-reading');
 const puzzlePiecesZone = document.getElementById('puzzle-pieces');
@@ -255,7 +256,7 @@ function startGame(level) {
     currentLevelDisplay.textContent = level;
     levelSelection.style.display = 'none';
     gameContainer.style.display = 'block';
-
+    gameRetryContainer.style.display = "block";
     loadNewWord();
 }
 
@@ -318,6 +319,16 @@ document.querySelectorAll('.level-btn').forEach(button => {
     button.addEventListener('click', (e) => {
         const level = e.target.getAttribute('data-level');
         startGame(level);
+    });
+});
+
+// Xử lý Sự kiện: Retry Level
+document.querySelectorAll('.retry-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+        selectedLevel = null;
+        levelSelection.style.display = 'block';
+        gameContainer.style.display = 'none';
+        gameRetryContainer.style.display = "none";
     });
 });
 
