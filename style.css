@@ -3,24 +3,24 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #1e2127; 
-    color: #f8f8f2; 
+    background-color: #1e2127;
+    color: #f8f8f2;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    padding-top: 20px; 
+    padding-top: 20px;
     box-sizing: border-box;
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 #game-wrapper {
     width: 95%;
     max-width: 800px;
-    background-color: #282c34; 
+    background-color: #282c34;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    padding: 15px; 
+    padding: 15px;
     box-sizing: border-box;
 }
 
@@ -29,37 +29,38 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px; 
-    flex-wrap: wrap; 
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 #main-title {
-    color: #4CAF50; 
-    font-size: 1.8em; 
+    color: #4CAF50;
+    font-size: 1.8em;
     margin: 0;
 }
 
 #level-selection {
     display: flex;
-    gap: 5px; 
+    gap: 5px;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: flex-end; 
+    justify-content: flex-end;
 }
 
 .level-label {
-    display: none; 
+    display: none;
 }
 
 .level-btn {
-    padding: 6px 10px; 
+    padding: 6px 10px;
     font-size: 14px;
     cursor: pointer;
     background-color: #3F454F;
     color: white;
     border: 1px solid #555;
     border-radius: 4px;
-    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s; /* Thêm transition cho hover */
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    /* Thêm transition cho hover */
 }
 
 /* 1. KHÔI PHỤC EVENT HOVER */
@@ -68,9 +69,11 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
+
 /* Style cho nút đang active (cần được thêm bằng JS) */
-.level-btn.active { 
-    background-color: #4CAF50; /* Màu xanh lá cây nổi bật */
+.level-btn.active {
+    background-color: #4CAF50;
+    /* Màu xanh lá cây nổi bật */
     color: #1E2127;
     font-weight: bold;
     border-color: #4CAF50;
@@ -78,10 +81,10 @@ body {
 
 /* Score Board và Word Info (Giữ nguyên) */
 #score-board {
-    background-color: #323842; 
-    padding: 8px 15px; 
+    background-color: #323842;
+    padding: 8px 15px;
     border-radius: 6px;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
     font-size: 1em;
     display: flex;
     justify-content: space-between;
@@ -89,16 +92,16 @@ body {
 
 #word-info {
     text-align: center;
-    background-color: #1E2127; 
-    padding: 15px 10px; 
+    background-color: #1E2127;
+    padding: 15px 10px;
     border-radius: 8px;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
     border: 1px solid #444;
 }
 
 #target-meaning {
-    font-size: 1.4em; 
-    color: #FFEE00; 
+    font-size: 1.4em;
+    color: #FFEE00;
     font-weight: bold;
 }
 
@@ -110,7 +113,7 @@ body {
 
 .zone-label {
     text-align: left;
-    margin: 10px 0 5px 0; 
+    margin: 10px 0 5px 0;
     font-size: 0.9em;
     color: #cccccc;
 }
@@ -118,41 +121,43 @@ body {
 /* Kanji Zones (Drop and Puzzle) */
 .kanji-zone {
     border: 2px dashed #444;
-    background-color: #3F454F; 
-    padding: 10px; 
-    min-height: 70px; 
+    background-color: #3F454F;
+    padding: 10px;
+    min-height: 70px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px; 
+    gap: 8px;
     border-radius: 8px;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 /* 2. STYLE DRAG DROP - Tăng cường hiệu ứng */
 .drag-over {
-    border: 2px solid #2196F3 !important; /* Xanh dương nổi bật, dùng !important để đảm bảo */
+    border: 2px solid #2196F3 !important;
+    /* Xanh dương nổi bật, dùng !important để đảm bảo */
     background-color: #3f4a5f !important;
 }
 
 .kanji-piece {
-    font-size: 32px; 
+    font-size: 32px;
     font-weight: bold;
-    padding: 8px 12px; 
+    padding: 8px 12px;
     border: 2px solid #555;
-    background-color: #1E2127; 
-    color: #4CAF50; 
-    border-radius: 6px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); 
-    user-select: none; 
+    background-color: #1E2127;
+    color: #4CAF50;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    user-select: none;
     cursor: grab;
     transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
 }
 
 /* 2. STYLE DRAG DROP - Khi đang kéo (DragStart) */
 .kanji-piece[style*="opacity: 0.4"] {
-    border: 2px solid #FFEE00 !important; /* Viền vàng nổi bật khi đang kéo */
+    border: 2px solid #FFEE00 !important;
+    /* Viền vàng nổi bật khi đang kéo */
     box-shadow: 0 0 10px rgba(255, 238, 0, 0.6);
 }
 
@@ -160,14 +165,14 @@ body {
 /* Check Button (Giữ nguyên) */
 #check-btn {
     width: 100%;
-    padding: 12px; 
+    padding: 12px;
     font-size: 1.1em;
     font-weight: bold;
-    background-color: #2196F3; 
+    background-color: #2196F3;
     color: white;
     border: none;
     border-radius: 6px;
-    margin-top: 20px; 
+    margin-top: 20px;
     transition: background-color 0.2s;
     cursor: pointer;
 }
@@ -184,12 +189,31 @@ body {
     min-height: 20px;
 }
 
+
+/* === HOÀN NGUYÊN STYLE BUTTON CŨ VÀ XÓA HIỆU ỨNG TRANSFORM === */
+#toggleAudioBtn {
+    padding: 4px 7px;
+    font-size: 1.25rem;
+    /* Giữ kích thước tương đối trên mobile */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #334155;
+    color: #f1f5f9;
+    transition: all 0.25s;
+}
+
+#toggleAudioBtn:hover:not(:disabled) {
+    background: #475569;
+    /* Xóa transform:scale(1.05) */
+}
+
 /* --- Responsive Rules (Mobile Optimization) --- */
 @media (max-width: 600px) {
     /* ... (Giữ nguyên các quy tắc responsive) ... */
-    
+
     .level-btn {
-        flex-grow: 1; 
-        min-width: 40px; 
+        flex-grow: 1;
+        min-width: 40px;
     }
 }

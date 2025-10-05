@@ -14,6 +14,43 @@ let currentWord = null;
 let selectedLevel = null;
 let draggedElement = null; // Biến lưu trữ phần tử đang được kéo
 
+
+// === CÁC BIẾN MỚI CHO ÂM THANH (WEB SPEECH API) ===
+let audioEnabled = true; // Mặc định bật âm thanh
+const synth = window.speechSynthesis;
+// Tìm giọng Nhật Bản (ja-JP) để phát âm chính xác
+let voice = null;
+if (synth) {
+    synth.onvoiceschanged = () => {
+        voice = synth.getVoices().find(v => v.lang === 'ja-JP') || null;
+    };
+    if (synth.getVoices().length > 0) {
+        voice = synth.getVoices().find(v => v.lang === 'ja-JP') || null;
+    }
+}
+
+// === HÀM PHÁT ÂM MỚI ===
+function speakKana(kana) {
+    if (!audioEnabled || !synth) return;
+
+    // Hủy bỏ giọng nói đang chạy (nếu có)
+    if (synth.speaking) {
+        synth.cancel();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(kana);
+    utterance.lang = 'ja-JP';
+    
+    
+    if (voice) {
+        utterance.voice = voice;
+    }
+    utterance.rate = 0.8;
+
+    synth.speak(utterance);
+}
+
+
 // Hàm Khởi tạo Dữ liệu
 function initializeData() {
     // Thu thập dữ liệu từ các file dictionaries/
@@ -164,10 +201,10 @@ checkButton.addEventListener('click', () => {
     // Lấy chuỗi từ hiện tại trong dropZone
     const attemptedWord = updateCurrentPieces().join('');
     
-    if (attemptedWord === currentWord.word) {
+    if (attemptedWord === currentWord.kanji) {
         feedbackElement.style.color = 'green';
-        feedbackElement.textContent = `CHÍNH XÁC! Bạn đã ghép được từ: ${currentWord.word} (${currentWord.reading}).`;
-        
+        feedbackElement.textContent = `CHÍNH XÁC! Bạn đã ghép được từ: ${currentWord.kanji} (${currentWord.reading}).`;
+
         // Cập nhật điểm và chuyển sang từ mới
         document.getElementById('current-score').textContent = parseInt(document.getElementById('current-score').textContent) + 10;
         setTimeout(loadNewWord, 2000); // Tải từ mới sau 2 giây
@@ -184,6 +221,10 @@ document.querySelectorAll('.level-btn').forEach(button => {
         startGame(level);
     });
 });
+
+function speakNewWorld() {
+    speakKana(currentWord.reading);
+}
 
 // Khởi tạo Game
 initializeData();
