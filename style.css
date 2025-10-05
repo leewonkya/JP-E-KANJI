@@ -189,6 +189,10 @@ body {
     min-height: 20px;
 }
 
+.retry-btn {
+    font-size: 1.5rem;
+    padding: 5px;
+}
 
 /* === HOÀN NGUYÊN STYLE BUTTON CŨ VÀ XÓA HIỆU ỨNG TRANSFORM === */
 #toggleAudioBtn {
