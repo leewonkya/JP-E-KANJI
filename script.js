@@ -19,10 +19,11 @@ function initializeData() {
     // Thu thập dữ liệu từ các file dictionaries/
     if (typeof N5_WORDS !== 'undefined') allWords['N5'] = N5_WORDS;
     if (typeof N4_WORDS !== 'undefined') allWords['N4'] = N4_WORDS;
+    if (typeof N3_WORDS !== 'undefined') allWords['N3'] = N3_WORDS;
     // Thêm các level khác ở đây (N3, N2, N1)
     
     // Nếu chưa có dữ liệu, thêm một mảng trống để tránh lỗi
-    ['N3', 'N2', 'N1'].forEach(level => {
+    ['N2', 'N1'].forEach(level => {
         if (!allWords[level]) allWords[level] = [{ word: "準備中", kanjis: ["準", "備", "中"], reading: "じゅんびちゅう", meaning: "Đang được chuẩn bị" }];
     });
 }

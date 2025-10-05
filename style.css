@@ -1,84 +1,195 @@
+/* General Body and Game Wrapper Styles */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f9;
-    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e2127; 
+    color: #f8f8f2; 
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 20px; 
+    box-sizing: border-box;
+    overflow-x: hidden; 
 }
 
-h1, h2 {
-    color: #333;
+#game-wrapper {
+    width: 95%;
+    max-width: 800px;
+    background-color: #282c34; 
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    padding: 15px; 
+    box-sizing: border-box;
 }
 
-#game-container {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Header and Level Selection */
+#header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; 
+    flex-wrap: wrap; 
+}
+
+#main-title {
+    color: #4CAF50; 
+    font-size: 1.8em; 
+    margin: 0;
+}
+
+#level-selection {
+    display: flex;
+    gap: 5px; 
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end; 
+}
+
+.level-label {
+    display: none; 
 }
 
 .level-btn {
-    padding: 10px 20px;
-    margin: 5px;
-    font-size: 16px;
+    padding: 6px 10px; 
+    font-size: 14px;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: #3F454F;
     color: white;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s; /* Thêm transition cho hover */
 }
 
-.kanji-zone {
-    border: 2px dashed #ccc;
-    padding: 15px;
-    margin: 20px 0;
-    min-height: 80px;
+/* 1. KHÔI PHỤC EVENT HOVER */
+.level-btn:hover {
+    background-color: #555a64;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+/* Style cho nút đang active (cần được thêm bằng JS) */
+.level-btn.active { 
+    background-color: #4CAF50; /* Màu xanh lá cây nổi bật */
+    color: #1E2127;
+    font-weight: bold;
+    border-color: #4CAF50;
+}
+
+/* Score Board và Word Info (Giữ nguyên) */
+#score-board {
+    background-color: #323842; 
+    padding: 8px 15px; 
+    border-radius: 6px;
+    margin-bottom: 15px; 
+    font-size: 1em;
     display: flex;
+    justify-content: space-between;
+}
+
+#word-info {
+    text-align: center;
+    background-color: #1E2127; 
+    padding: 15px 10px; 
+    border-radius: 8px;
+    margin-bottom: 15px; 
+    border: 1px solid #444;
+}
+
+#target-meaning {
+    font-size: 1.4em; 
+    color: #FFEE00; 
+    font-weight: bold;
+}
+
+#target-reading {
+    font-size: 1.1em;
+    color: #B0B0B0;
+    margin-top: 5px;
+}
+
+.zone-label {
+    text-align: left;
+    margin: 10px 0 5px 0; 
+    font-size: 0.9em;
+    color: #cccccc;
+}
+
+/* Kanji Zones (Drop and Puzzle) */
+.kanji-zone {
+    border: 2px dashed #444;
+    background-color: #3F454F; 
+    padding: 10px; 
+    min-height: 70px; 
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 8px; 
     border-radius: 8px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* 2. STYLE DRAG DROP - Tăng cường hiệu ứng */
+.drag-over {
+    border: 2px solid #2196F3 !important; /* Xanh dương nổi bật, dùng !important để đảm bảo */
+    background-color: #3f4a5f !important;
 }
 
 .kanji-piece {
-    /* Mảnh ghép Kanji */
-    font-size: 36px;
-    padding: 10px 15px;
-    border: 1px solid #333;
-    background-color: #ffc107;
-    border-radius: 5px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 32px; 
+    font-weight: bold;
+    padding: 8px 12px; 
+    border: 2px solid #555;
+    background-color: #1E2127; 
+    color: #4CAF50; 
+    border-radius: 6px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); 
     user-select: none; 
-    transition: opacity 0.2s;
-    cursor: grab; /* Thay đổi con trỏ thành biểu tượng kéo */
+    cursor: grab;
+    transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
 }
 
-/* Hiệu ứng khi kéo qua vùng drop */
-.drag-over {
-    border: 2px solid #007bff; 
-    background-color: #e6f7ff;
+/* 2. STYLE DRAG DROP - Khi đang kéo (DragStart) */
+.kanji-piece[style*="opacity: 0.4"] {
+    border: 2px solid #FFEE00 !important; /* Viền vàng nổi bật khi đang kéo */
+    box-shadow: 0 0 10px rgba(255, 238, 0, 0.6);
 }
 
-/* Mảnh ghép trong Drop Zone (Tùy chọn kiểu dáng khác) */
-#drop-zone .kanji-piece {
-    background-color: #e9ecef;
-    border: 1px solid #0056b3;
-}
 
+/* Check Button (Giữ nguyên) */
 #check-btn {
-    padding: 10px 30px;
-    font-size: 18px;
-    background-color: #28a745;
+    width: 100%;
+    padding: 12px; 
+    font-size: 1.1em;
+    font-weight: bold;
+    background-color: #2196F3; 
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    margin-top: 20px; 
+    transition: background-color 0.2s;
     cursor: pointer;
-    margin-top: 10px;
 }
 
+#check-btn:hover {
+    background-color: #1a71c2;
+}
+
+/* Feedback Message (Giữ nguyên) */
 #feedback {
-    margin-top: 15px;
-    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1em;
     min-height: 20px;
+}
+
+/* --- Responsive Rules (Mobile Optimization) --- */
+@media (max-width: 600px) {
+    /* ... (Giữ nguyên các quy tắc responsive) ... */
+    
+    .level-btn {
+        flex-grow: 1; 
+        min-width: 40px; 
+    }
 }
