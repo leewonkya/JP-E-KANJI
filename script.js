@@ -12,7 +12,10 @@ const currentLevelDisplay = document.getElementById('current-level');
 let allWords = {}; 
 let currentWord = null;
 let selectedLevel = null;
-let draggedElement = null; // Biến lưu trữ phần tử đang được kéo
+
+// Biến lưu trữ phần tử đang được kéo (dùng chung cho cả chuột và cảm ứng)
+let draggedElement = null; 
+let currentPieces = []; // Khởi tạo lại để đảm bảo không bị lỗi reference
 
 
 // === CÁC BIẾN MỚI CHO ÂM THANH (WEB SPEECH API) ===
@@ -74,12 +77,15 @@ function updateCurrentPieces() {
     return pieces;
 }
 
-// Hàm Xử lý Kéo Thả (Drag and Drop Handlers)
+// =======================================================
+// === 1. LOGIC XỬ LÝ CHUỘT (DRAG & DROP API) - Desktop ===
+// =======================================================
+
 function handleDragStart(e) {
     draggedElement = e.target;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', e.target.textContent); 
-    e.target.style.opacity = '0.4'; // Hiệu ứng đang kéo
+    e.target.style.opacity = '0.4'; 
 }
 
 function handleDragEnd(e) {
@@ -88,17 +94,18 @@ function handleDragEnd(e) {
 }
 
 function handleDragOver(e) {
-    e.preventDefault(); // Cần thiết để cho phép thả (drop)
+    e.preventDefault(); 
     e.dataTransfer.dropEffect = 'move';
-}
-
-function handleDragEnter(e) {
-    e.preventDefault();
-    dropZone.classList.add('drag-over');
+    // Thêm hiệu ứng drag-over chỉ khi đang kéo qua drop zone
+    if (e.currentTarget.id === 'drop-zone') {
+        dropZone.classList.add('drag-over');
+    }
 }
 
 function handleDragLeave(e) {
-    dropZone.classList.remove('drag-over');
+    if (e.currentTarget.id === 'drop-zone') {
+        dropZone.classList.remove('drag-over');
+    }
 }
 
 function handleDrop(e) {
@@ -106,49 +113,141 @@ function handleDrop(e) {
     dropZone.classList.remove('drag-over');
 
     if (draggedElement) {
-        // Kiểm tra nếu phần tử đang được kéo đến từ puzzlePiecesZone
-        if (draggedElement.parentElement.id === 'puzzle-pieces') {
+        if (e.currentTarget.id === 'drop-zone') {
             // Thêm vào drop zone
             dropZone.appendChild(draggedElement);
-        } else if (draggedElement.parentElement.id === 'drop-zone') {
-            // Logic sắp xếp lại trong drop zone (cần phức tạp hơn, tạm thời chỉ cho phép di chuyển)
-            // Để đơn giản, chỉ cho phép thả từ puzzle-pieces sang drop-zone
-            // Thả vào drop zone
-            dropZone.appendChild(draggedElement);
-        }
+            // Cần cập nhật currentPieces sau khi thả
+            currentPieces = updateCurrentPieces(); 
+        } 
     }
 }
 
-// Hàm gắn các Event Listeners D&D vào các mảnh ghép và khu vực drop
-function addDragDropListeners() {
-    // 1. Dùng event delegation cho các mảnh ghép (dragstart, dragend)
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.classList.contains('kanji-piece')) {
-            handleDragStart(e);
-        }
-    });
+// =======================================================
+// === 2. LOGIC XỬ LÝ CẢM ỨNG (TOUCH EVENTS) - Mobile ===
+// =======================================================
+
+let touchStartX, touchStartY; // Tọa độ ban đầu
+const DROP_THRESHOLD = 50; // Ngưỡng pixel để xác định việc thả
+
+function handleTouchStart(e) {
+    // Chỉ xử lý khi có một ngón tay chạm vào
+    if (e.touches.length === 1 && e.target.classList.contains('kanji-piece')) {
+        e.preventDefault(); // Ngăn cuộn trang
+        draggedElement = e.target;
+        
+        // Lưu tọa độ ban đầu
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        
+        // Bắt đầu hiệu ứng kéo
+        draggedElement.style.opacity = '0.4';
+        draggedElement.style.position = 'absolute';
+        draggedElement.style.zIndex = '1000';
+    }
+}
+
+function handleTouchMove(e) {
+    if (!draggedElement) return;
+    e.preventDefault();
+
+    // Di chuyển phần tử theo ngón tay
+    const touch = e.touches[0];
+    draggedElement.style.left = touch.clientX - (draggedElement.offsetWidth / 2) + 'px';
+    draggedElement.style.top = touch.clientY - (draggedElement.offsetHeight / 2) + 'px';
     
+    // Kiểm tra và thêm hiệu ứng drag-over khi di chuyển qua dropZone
+    const dropZoneRect = dropZone.getBoundingClientRect();
+    const isOverDropZone = touch.clientX > dropZoneRect.left && 
+                           touch.clientX < dropZoneRect.right && 
+                           touch.clientY > dropZoneRect.top && 
+                           touch.clientY < dropZoneRect.bottom;
+
+    if (isOverDropZone) {
+        dropZone.classList.add('drag-over');
+    } else {
+        dropZone.classList.remove('drag-over');
+    }
+}
+
+function handleTouchEnd(e) {
+    if (!draggedElement) return;
+    
+    // Vô hiệu hóa hiệu ứng kéo
+    draggedElement.style.opacity = '1';
+    draggedElement.style.position = ''; // Khôi phục position
+    draggedElement.style.zIndex = '';
+    draggedElement.style.left = '';
+    draggedElement.style.top = '';
+
+    dropZone.classList.remove('drag-over');
+
+    // Lấy tọa độ cuối cùng (dựa vào last changed touch)
+    const touch = e.changedTouches[0];
+    
+    // 1. Kiểm tra nếu tọa độ cuối nằm trong Drop Zone
+    const dropZoneRect = dropZone.getBoundingClientRect();
+    if (touch.clientX > dropZoneRect.left && 
+        touch.clientX < dropZoneRect.right && 
+        touch.clientY > dropZoneRect.top && 
+        touch.clientY < dropZoneRect.bottom) 
+    {
+        // Thả thành công vào Drop Zone
+        dropZone.appendChild(draggedElement);
+        currentPieces = updateCurrentPieces();
+    } else if (draggedElement.parentElement.id === 'drop-zone') {
+        // Nếu không thả vào vùng hợp lệ, nhưng nó đang ở trong dropZone, 
+        // ta giữ nguyên nó ở đó.
+    } else {
+        // Nếu không thả vào vùng hợp lệ, trả về puzzlePiecesZone (Vùng mặc định)
+        puzzlePiecesZone.appendChild(draggedElement);
+    }
+    
+    draggedElement = null;
+}
+
+
+// =======================================================
+// === 3. GÁN SỰ KIỆN (CHUNG) ===
+// =======================================================
+
+function addDragDropListeners() {
+    // 1. Gán sự kiện Chuột (Desktop)
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.classList.contains('kanji-piece')) handleDragStart(e);
+    });
     document.addEventListener('dragend', function(e) {
-        if (e.target.classList.contains('kanji-piece')) {
-            handleDragEnd(e);
-        }
+        if (e.target.classList.contains('kanji-piece')) handleDragEnd(e);
     });
 
-    // 2. Event cho Drop Zone
     dropZone.addEventListener('dragover', handleDragOver);
-    dropZone.addEventListener('dragenter', handleDragEnter);
     dropZone.addEventListener('dragleave', handleDragLeave);
     dropZone.addEventListener('drop', handleDrop);
     
-    // 3. Xử lý click (di chuyển ngược lại từ DropZone về PuzzleZone) - Cải thiện UX
+    // 2. Gán sự kiện Cảm ứng (Mobile)
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+
+
+    // 3. Xử lý click để di chuyển ngược lại (UX Improvement)
     dropZone.onclick = function(event) {
         if (event.target.classList.contains('kanji-piece')) {
             const piece = event.target;
             puzzlePiecesZone.appendChild(piece);
+            currentPieces = updateCurrentPieces(); // Cập nhật lại mảng
+        }
+    };
+    
+    // 4. Sự kiện click để chuyển từ puzzle zone sang drop zone (UX Improvement)
+    puzzlePiecesZone.onclick = function(event) {
+        if (event.target.classList.contains('kanji-piece')) {
+            const piece = event.target;
+            dropZone.appendChild(piece);
+            currentPieces = updateCurrentPieces(); // Cập nhật lại mảng
         }
     };
 }
-
 
 // Hàm Bắt đầu game/Chuyển màn
 function startGame(level) {
