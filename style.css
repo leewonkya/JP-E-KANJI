@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f9;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+#game-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.level-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.kanji-zone {
+    border: 2px dashed #ccc;
+    padding: 15px;
+    margin: 20px 0;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+}
+
+.kanji-piece {
+    /* Mảnh ghép Kanji */
+    font-size: 36px;
+    padding: 10px 15px;
+    border: 1px solid #333;
+    background-color: #ffc107;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    user-select: none; 
+    transition: opacity 0.2s;
+    cursor: grab; /* Thay đổi con trỏ thành biểu tượng kéo */
+}
+
+/* Hiệu ứng khi kéo qua vùng drop */
+.drag-over {
+    border: 2px solid #007bff; 
+    background-color: #e6f7ff;
+}
+
+/* Mảnh ghép trong Drop Zone (Tùy chọn kiểu dáng khác) */
+#drop-zone .kanji-piece {
+    background-color: #e9ecef;
+    border: 1px solid #0056b3;
+}
+
+#check-btn {
+    padding: 10px 30px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#feedback {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 20px;
+}

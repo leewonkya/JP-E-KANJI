@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji Word Builder Game - JLPT</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Kanji Word Builder</h1>
+
+    <div id="level-selection">
+        <h2>Chọn Cấp Độ:</h2>
+        <button data-level="N5" class="level-btn">N5</button>
+        <button data-level="N4" class="level-btn">N4</button>
+        <button data-level="N3" class="level-btn">N3</button>
+        <button data-level="N2" class="level-btn">N2</button>
+        <button data-level="N1" class="level-btn">N1</button>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        <div id="score-board">
+            Điểm: <span id="current-score">0</span> | Level: <span id="current-level"></span>
+        </div>
+
+        <div id="word-info">
+            <p><strong>Nghĩa:</strong> <span id="target-meaning"></span></p>
+            <p><strong>Cách đọc:</strong> <span id="target-reading"></span></p>
+        </div>
+        
+        <p>Thả Kanji vào đây (Drop Zone):</p>
+        <div id="drop-zone" class="kanji-zone"></div>
+        
+        <p>Các mảnh ghép Kanji (Kéo từ đây):</p>
+        <div id="puzzle-pieces" class="kanji-zone"></div>
+
+        <button id="check-btn">Kiểm Tra</button>
+        <p id="feedback"></p>
+    </div>
+
+    <script src="vendors/lodash.min.js"></script> 
+    
+    <script src="dictionaries/n5.js"></script>
+    <!-- <script src="dictionaries/n4.js"></script> -->
+    <script src="script.js"></script>
+</body>
+</html>
